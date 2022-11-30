@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { Product } from 'src/app/models/product.interface';
 import { ProductService } from 'src/app/services/product.service';
@@ -11,14 +11,30 @@ import { ProductService } from 'src/app/services/product.service';
 })
 export class ProductDetailComponent implements OnInit {
 
-  @Input() product: Product;
+  //@Input() product: Product;
   product$: Observable<Product>;
 
   constructor(
     private activatedRoute: ActivatedRoute,
-    private productService: ProductService
+    private productService: ProductService,
+    private router: Router
   ) {
 
+  }
+
+  delete(id: number) {
+    if(window.confirm('Are you sure ??')) {
+      this
+      .productService
+      .deleteProduct(id)
+      .subscribe(
+        () => {
+          console.log('Product deleted!');
+          this.productService.initProducts();
+          this.router.navigateByUrl('/products');
+        }
+      )
+    }
   }
 
   ngOnInit(): void {
